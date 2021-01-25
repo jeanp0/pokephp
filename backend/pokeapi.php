@@ -20,12 +20,13 @@ function permissions()
 }
 permissions();
 
-$api_raw = file_get_contents("https://pokeapi.co/api/v2/pokedex/2/");
-$result = json_decode($api_raw, true);
 
-$pokemons = [];
 
 if (isset($_POST["name"])) {
+    $api_raw = file_get_contents("https://pokeapi.co/api/v2/pokedex/2/");
+    $result = json_decode($api_raw, true);
+
+    $pokemons = [];
     foreach ($result["pokemon_entries"] as $key => $value) {
         // creo un pokemon (objeto) con los datos obtenidos
         $id = $value['entry_number'];
@@ -40,15 +41,11 @@ if (isset($_POST["name"])) {
 
     if ($_POST["name"] !== "") {
         $pokemons = array_values(array_filter($pokemons, function ($poke) {
-           return strpos(strtolower($poke->name), strtolower($_POST["name"])) === 0;
+            return strpos(strtolower($poke->name), strtolower($_POST["name"])) === 0;
         }));
     }
+    echo json_encode($pokemons);
 }
-
-
-
-echo json_encode($pokemons);
-
 
 // class Number
 // {
