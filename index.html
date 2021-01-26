@@ -12,7 +12,7 @@
 </head>
 
 <body>
-  <div class="container">
+  <div id="main" class="container">
 
     <div class="my-4">
       <h1 class="text-center my-4">PokeDex</h1>
@@ -24,10 +24,16 @@
         <label class="form-check-label" for="filter">Filtrar</label>
       </div>
     </div>
-    
+
     <!-- Cards container -->
-    <div id="cards" class="row">
-    
+    <div id="cards" class="row"></div>
+
+    <div class="modal fade" id="pokeModal" tabindex="-1" aria-labelledby="pokeModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content" id="pokeModalBody">
+          
+        </div>
+      </div>
     </div>
   </div>
 
