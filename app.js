@@ -3,7 +3,7 @@ const $main = document.getElementById("main");
 const $searchInput = document.getElementById("search");
 const $filterSwitch = document.getElementById("filter");
 
-async function fetchPokes(criteria = "") {
+async function fetchPokeCardData(criteria = "") {
   console.log("Fetching pokemons...");
   const url = "backend/all-pokes.php";
   const response = await fetch(url, {
@@ -44,13 +44,13 @@ function createPokeCard(pokemon) {
 
   // add modal event
   pokeCard.addEventListener("click", () => {
-    createPokeModal(pokemon);
+    fetchPokeModalData(pokemon);
   });
   $cardsContainer.appendChild(pokeCard);
 }
 
-async function createPokeModal(pokemon) {
-  console.log("Creating poke modal...");
+async function fetchPokeModalData(pokemon) {
+  console.log("Fetching poke modal data...");
 
   const url = "backend/specific-poke.php";
   const response = await fetch(url, {
@@ -63,29 +63,17 @@ async function createPokeModal(pokemon) {
     .then((res) => res.json())
     .catch((error) => console.error("Error:", error));
 
-  addPokeModalContent(response);
-  console.log("Poke modal created");
+  console.log("Poke modal data fetched");
+  createPokeModal(response);
 }
 
-function PokeCardComponent({ id, name }) {
-  return `
-    <div class="card mb-4 text-center py-2" data-bs-toggle="modal" data-bs-target="#pokeModal">
-      <h3 class="name">${name}</h3>
-      <div class="img-poke">
-        <img src="assets/${id
-          .toString()
-          .padStart(3, "0")}.png" alt="pokemon" class="img-fluid">
-      </div>
-      <span class="number">#${id.toString().padStart(3, "0")}</span>
-    </div>
-  `;
-}
-
-function addPokeModalContent({ id, name, abilities, description }) {
+function createPokeModal({ id, name, abilities, description }) {
+  console.log("Creating poke modal content...");
   const $pokeModel = document.getElementById("pokeModalBody");
   let abilitiesTemplate = ``;
   abilities.forEach((ability) => {
-    abilitiesTemplate += `<li>${ability}</li>`
+    
+    abilitiesTemplate += `<li>${ability.charAt(0).toUpperCase() + ability.slice(1)}</li>`
   });
   $pokeModel.innerHTML = `
       <div class="modal-header">
@@ -106,16 +94,32 @@ function addPokeModalContent({ id, name, abilities, description }) {
         </ul>
       </div>
   `;
+  console.log("Poke modal content added");
 }
+
+function PokeCardComponent({ id, name }) {
+  return `
+    <div class="card mb-4 text-center py-2" data-bs-toggle="modal" data-bs-target="#pokeModal">
+      <h3 class="name">${name}</h3>
+      <div class="img-poke">
+        <img src="assets/${id
+          .toString()
+          .padStart(3, "0")}.png" alt="pokemon" class="img-fluid">
+      </div>
+      <span class="number">#${id.toString().padStart(3, "0")}</span>
+    </div>
+  `;
+}
+
 
 // Events
 $searchInput.addEventListener("keyup", () => {
   if ($filterSwitch.checked) {
     const criteria = $searchInput.value;
     if (criteria) {
-      fetchPokes(criteria);
+      fetchPokeCardData(criteria);
     } else {
-      fetchPokes();
+      fetchPokeCardData();
     }
   }
 });
@@ -123,11 +127,11 @@ $searchInput.addEventListener("keyup", () => {
 $filterSwitch.addEventListener("change", () => {
   if ($filterSwitch.checked) {
     const criteria = $searchInput.value;
-    fetchPokes(criteria);
+    fetchPokeCardData(criteria);
   } else {
-    fetchPokes();
+    fetchPokeCardData();
   }
 });
 
 // Main?
-fetchPokes();
+fetchPokeCardData();
